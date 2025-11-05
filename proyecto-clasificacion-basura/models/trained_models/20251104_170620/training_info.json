@@ -1,0 +1,30 @@
+{
+    "timestamp": "20251104_170620",
+    "model_architecture": "MobileNetV2 with Custom Head",
+    "image_size": [
+        224,
+        224
+    ],
+    "batch_size": 32,
+    "initial_epochs": 15,
+    "fine_tune_epochs": 25,
+    "classes": [
+        "cardboard",
+        "glass",
+        "metal",
+        "paper",
+        "plastic",
+        "trash"
+    ],
+    "class_indices": {
+        "cardboard": 0,
+        "glass": 1,
+        "metal": 2,
+        "paper": 3,
+        "plastic": 4,
+        "trash": 5
+    },
+    "final_training_accuracy": 0.564249575138092,
+    "final_validation_accuracy": 0.790450930595398,
+    "total_parameters": 3081926
+}

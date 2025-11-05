@@ -1,0 +1,21 @@
+# config/parameters.yaml
+data:
+  image_size: [224, 224]
+  batch_size: 32
+  validation_split: 0.15
+  test_split: 0.15
+  classes: ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
+
+training:
+  base_model: "MobileNetV2"
+  initial_epochs: 15
+  fine_tune_epochs: 25
+  learning_rate: 0.001
+  fine_tune_learning_rate: 0.00001
+
+augmentation:
+  rotation_range: 20
+  width_shift_range: 0.2
+  height_shift_range: 0.2
+  horizontal_flip: true
+  zoom_range: 0.2
