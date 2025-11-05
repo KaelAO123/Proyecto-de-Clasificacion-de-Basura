@@ -1,0 +1,22 @@
+{
+    "model_name": "best_model",
+    "input_shape": [
+        null,
+        224,
+        224,
+        3
+    ],
+    "output_shape": [
+        null,
+        6
+    ],
+    "num_parameters": 3081926,
+    "classes": [
+        "cardboard",
+        "glass",
+        "metal",
+        "paper",
+        "plastic",
+        "trash"
+    ]
+}
