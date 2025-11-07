@@ -145,44 +145,56 @@ class ModelEvaluator:
         if len(misclassified_idx) > 0:
             print(f"\n❌ Ejemplos de misclasificaciones ({len(misclassified_idx)} casos):")
             
-            # Tomar algunos ejemplos aleatorios
+            # Tomar algunos ejemplos aleatorios de los errores
             sample_idx = np.random.choice(
                 misclassified_idx, 
                 size=min(5, len(misclassified_idx)), 
                 replace=False
             )
+
+            # Obtener rutas de las imágenes correspondientes
+            filepaths = np.array(test_generator.filepaths)
             
-            # Obtener batch de imágenes
-            test_generator.reset()
-            images, true_labels = next(test_generator)
+            # Cargar las imágenes reales desde disco según sus índices globales
+            images = []
+            true_labels = []
+            for idx in sample_idx:
+                img_path = filepaths[idx]
+                img = tf.keras.preprocessing.image.load_img(img_path, target_size=test_generator.image_shape[:2])
+                img = tf.keras.preprocessing.image.img_to_array(img) / 255.0
+                images.append(img)
+                true_labels.append(y_true[idx])
+
+            images = np.array(images)
+            true_labels = np.array(true_labels)
             
             # Visualizar misclasificaciones
             self.plot_misclassifications(images, true_labels, y_pred, sample_idx)
+
     
-    def plot_misclassifications(self, images, true_labels, y_pred, misclassified_idx):
+    def plot_misclassifications(self, images, true_labels, y_pred, sample_idx):
         """Visualiza ejemplos de misclasificación"""
-        
+
         fig, axes = plt.subplots(2, 3, figsize=(15, 10))
         axes = axes.ravel()
-        
-        for i, idx in enumerate(misclassified_idx[:6]):
-            if i < len(axes):
-                axes[i].imshow(images[idx])
-                
-                true_class = self.class_names[np.argmax(true_labels[idx])]
-                pred_class = self.class_names[y_pred[idx]]
-                
-                axes[i].set_title(f'Real: {true_class}\nPred: {pred_class}', 
-                                color='red', fontsize=10)
-                axes[i].axis('off')
-        
-        # Ocultar ejes vacíos
-        for i in range(len(misclassified_idx[:6]), len(axes)):
+
+        for i in range(len(images)):
+            axes[i].imshow(images[i])
             axes[i].axis('off')
-        
+
+            true_class = self.class_names[true_labels[i]]
+            pred_class = self.class_names[y_pred[sample_idx[i]]]  # ✅ usar sample_idx
+
+            axes[i].set_title(f'Real: {true_class}\nPred: {pred_class}', color='red', fontsize=10)
+
+        # Ocultar ejes vacíos
+        for i in range(len(images), len(axes)):
+            axes[i].axis('off')
+
         plt.tight_layout()
         plt.savefig(str(self.results_dir / "misclassifications.png"), dpi=300, bbox_inches='tight')
         plt.show()
+
     
     def save_evaluation_results(self, y_true, y_pred, test_loss, test_accuracy):
         """Guarda resultados completos de evaluación"""
@@ -245,9 +257,30 @@ def evaluate_complete_pipeline(model, test_generator):
         }
     }
 
-if __name__ == "__main__":
-    from src.model_training import main as train_main
+# if __name__ == "__main__":
+#     from src.model_training import main as train_main
     
-    # Entrenar y evaluar
-    trained_model, history, test_gen = train_main()
-    results = evaluate_complete_pipeline(trained_model, test_gen)
+#     # Entrenar y evaluar
+#     trained_model, history, test_gen = train_main()
+#     results = evaluate_complete_pipeline(trained_model, test_gen)
+
+if __name__ == "__main__":
+    from tensorflow.keras.models import load_model
+    from src.data_loader import create_test_generator  # asegúrate de tener esta función
+    import yaml
+
+    # Cargar configuración
+    config = yaml.safe_load(open("config/parameters.yaml", "r"))
+
+    # Ruta del modelo ya entrenado
+    model_path = config.get("model_path", "models/trained_models/20251105_094221/best_model.h5")
+
+    print(f"🧩 Cargando modelo entrenado desde: {model_path}")
+    model = load_model(model_path)
+
+    # Crear test_generator (usa la función que ya tengas para generar tus datos de test)
+    print("📂 Cargando conjunto de test...")
+    test_generator = create_test_generator(config)
+
+    # Evaluar el modelo cargado
+    results = evaluate_complete_pipeline(model, test_generator)

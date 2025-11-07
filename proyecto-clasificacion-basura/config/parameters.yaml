@@ -5,6 +5,9 @@ data:
   validation_split: 0.15
   test_split: 0.15
   classes: ["cardboard", "glass", "metal", "paper", "plastic", "trash"]
+  test_dir: "data/processed/test"   # ✅ corregido
+  train_dir: "data/processed/train"
+  val_dir: "data/processed/val"
 
 training:
   base_model: "MobileNetV2"

@@ -1,0 +1,122 @@
+
+        <!DOCTYPE html>
+        <html>
+        <head>
+            <title>ECO AI - Cámara iPhone</title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+            <style>
+                body { 
+                    margin: 0; 
+                    padding: 20px; 
+                    background: #1a1a1a; 
+                    color: white;
+                    font-family: Arial, sans-serif;
+                    text-align: center;
+                }
+                .container { 
+                    max-width: 100%; 
+                    margin: 0 auto; 
+                }
+                video { 
+                    width: 100%; 
+                    max-width: 640px; 
+                    border: 3px solid #00ff88; 
+                    border-radius: 10px; 
+                }
+                .instructions { 
+                    background: #2a2a2a; 
+                    padding: 15px; 
+                    border-radius: 10px; 
+                    margin: 20px 0; 
+                }
+                button { 
+                    background: #00ff88; 
+                    color: black; 
+                    border: none; 
+                    padding: 15px 30px; 
+                    font-size: 18px; 
+                    border-radius: 25px; 
+                    margin: 10px; 
+                    cursor: pointer; 
+                }
+                .status { 
+                    padding: 10px; 
+                    margin: 10px 0; 
+                    border-radius: 5px; 
+                }
+                .connected { background: #00ff88; color: black; }
+                .disconnected { background: #ff4444; color: white; }
+            </style>
+        </head>
+        <body>
+            <div class="container">
+                <h1>🎯 ECO AI - Clasificador de Basura</h1>
+                
+                <div class="instructions">
+                    <h3>📱 Instrucciones:</h3>
+                    <p>1. Permite el acceso a la cámara cuando Safari lo pida</p>
+                    <p>2. Apunta los objetos de basura a la cámara</p>
+                    <p>3. Mira los resultados en tu computadora</p>
+                    <p><strong>💡 Consejo:</strong> Usa la cámara de tu computadora para clasificar</p>
+                </div>
+                
+                <button onclick="startCamera()">🎥 Activar Cámara iPhone</button>
+                <button onclick="stopCamera()">⏹️ Detener Cámara</button>
+                
+                <div id="status" class="status disconnected">
+                    Cámara iPhone: Desconectada
+                </div>
+                
+                <video id="video" autoplay playsinline></video>
+                
+                <div style="margin-top: 20px;">
+                    <p><strong>Modo Simulación:</strong> Esta pantalla es solo para guía visual</p>
+                    <p>La clasificación real se hace con la cámara de tu computadora</p>
+                </div>
+            </div>
+
+            <script>
+                let stream = null;
+                const video = document.getElementById('video');
+                const status = document.getElementById('status');
+
+                function updateStatus(message, isConnected) {
+                    status.textContent = message;
+                    status.className = isConnected ? 'status connected' : 'status disconnected';
+                }
+
+                async function startCamera() {
+                    try {
+                        // Solicitar acceso a la cámara
+                        stream = await navigator.mediaDevices.getUserMedia({ 
+                            video: { 
+                                width: { ideal: 1280 },
+                                height: { ideal: 720 },
+                                facingMode: 'environment' 
+                            }, 
+                            audio: false 
+                        });
+                        
+                        video.srcObject = stream;
+                        updateStatus('Cámara iPhone: Conectada ✅', true);
+                        
+                    } catch (err) {
+                        updateStatus('Error: ' + err.message, false);
+                        console.error('Error accessing camera:', err);
+                    }
+                }
+
+                function stopCamera() {
+                    if (stream) {
+                        stream.getTracks().forEach(track => track.stop());
+                        video.srcObject = null;
+                        updateStatus('Cámara iPhone: Desconectada', false);
+                    }
+                }
+
+                // Iniciar cámara automáticamente
+                window.addEventListener('load', startCamera);
+            </script>
+        </body>
+        </html>
+        
