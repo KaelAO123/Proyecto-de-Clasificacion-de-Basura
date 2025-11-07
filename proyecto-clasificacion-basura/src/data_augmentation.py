@@ -1,4 +1,3 @@
-# src/data_augmentation.py
 import tensorflow as tf
 import numpy as np
 import cv2
@@ -88,18 +87,15 @@ class AdvancedAugmentor:
             if augmented_count >= needed:
                 break
                 
-            # Cargar imagen
             image = cv2.imread(str(img_path))
             image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
             
-            # Generar versiones aumentadas
             for i in range(augment_per_image):
                 if augmented_count >= needed:
                     break
                     
                 augmented_image = self.augment_image(image)
                 
-                # Guardar imagen aumentada
                 new_filename = f"aug_{augmented_count}_{img_path.name}"
                 new_path = class_path / new_filename
                 
