@@ -26,9 +26,9 @@ class CameraGarbageClassifier:
                 raise FileNotFoundError("No se encontraron modelos entrenados")
             model_path = max(model_files, key=lambda x: x.stat().st_mtime)
         
-        print(f"📷 Cargando modelo: {model_path}")
+        print(f"Cargando modelo: {model_path}")
         self.model = tf.keras.models.load_model(str(model_path))
-        print("✅ Modelo cargado exitosamente")
+        print("Modelo cargado exitosamente")
         
         # Configuración
         self.img_size = tuple(self.config['data']['image_size'])
@@ -37,32 +37,32 @@ class CameraGarbageClassifier:
         # Información de reciclaje
         self.recycling_info = {
             "cardboard": {
-                "category": "🟦 RECICLABLE", 
+                "category": "RECICLABLE", 
                 "container": "Contenedor AZUL",
                 "instructions": "Doblar y colocar limpio"
             },
             "glass": {
-                "category": "🟩 RECICLABLE",
+                "category": "RECICLABLE",
                 "container": "Contenedor VERDE", 
                 "instructions": "Separar por colores"
             },
             "metal": {
-                "category": "🟨 RECICLABLE",
+                "category": "RECICLABLE",
                 "container": "Contenedor AMARILLO",
                 "instructions": "Latas limpias"
             },
             "paper": {
-                "category": "🟦 RECICLABLE", 
+                "category": "RECICLABLE", 
                 "container": "Contenedor AZUL",
                 "instructions": "Sin manchas de grasa"
             },
             "plastic": {
-                "category": "🟨 RECICLABLE",
+                "category": "RECICLABLE",
                 "container": "Contenedor AMARILLO", 
                 "instructions": "Enjuagar y secar"
             },
             "trash": {
-                "category": "⚫ NO RECICLABLE",
+                "category": "NO RECICLABLE",
                 "container": "Contenedor GRIS/ORGÁNICO",
                 "instructions": "Reducir consumo"
             }
@@ -174,23 +174,23 @@ class CameraGarbageClassifier:
     def run_camera_classification(self, camera_index=0):
         """Ejecuta la clasificación en tiempo real con la cámara"""
         
-        print("🎥 Iniciando cámara...")
+        print("Iniciando cámara...")
         cap = cv2.VideoCapture(camera_index)
         
         if not cap.isOpened():
-            print("❌ No se pudo abrir la cámara")
+            print("No se pudo abrir la cámara")
             return
         
         # Configurar resolución de la cámara
         cap.set(cv2.CAP_PROP_FRAME_WIDTH, 1280)
         cap.set(cv2.CAP_PROP_FRAME_HEIGHT, 720)
         
-        print("✅ Cámara lista")
-        print("\n📋 CONTROLES:")
+        print("Cámara lista")
+        print("\nCONTROLES:")
         print("   - Presiona 'Q' para salir")
         print("   - Presiona 'S' para guardar frame actual")
         print("   - Presiona 'R' para reiniciar estadísticas")
-        print("\n🎯 Coloca el objeto de basura en el rectángulo central")
+        print("\nColoca el objeto de basura en el rectángulo central")
         
         # Variables para FPS y estadísticas
         fps_counter = 0
@@ -202,7 +202,7 @@ class CameraGarbageClassifier:
             while True:
                 ret, frame = cap.read()
                 if not ret:
-                    print("❌ Error leyendo frame de la cámara")
+                    print("Error leyendo frame de la cámara")
                     break
                 
                 # Voltear frame horizontalmente (espejo)
@@ -227,7 +227,7 @@ class CameraGarbageClassifier:
                     fps_time = time.time()
                     
                     # Mostrar FPS en consola
-                    print(f"📊 FPS: {fps}, Predicción: {predicted_class} ({confidence:.1%})")
+                    print(f"FPS: {fps}, Predicción: {predicted_class} ({confidence:.1%})")
                 
                 # Mostrar frame
                 cv2.imshow('Clasificador de Basura - ECO AI', frame)
@@ -241,23 +241,23 @@ class CameraGarbageClassifier:
                     timestamp = int(time.time())
                     filename = f"capture_{timestamp}_{predicted_class}.jpg"
                     cv2.imwrite(filename, frame)
-                    print(f"💾 Frame guardado como: {filename}")
+                    print(f"Frame guardado como: {filename}")
                 elif key == ord('r'):
                     # Reiniciar estadísticas
                     predictions_history = []
-                    print("🔄 Estadísticas reiniciadas")
+                    print("Estadísticas reiniciadas")
                 
         except KeyboardInterrupt:
-            print("\n⏹️  Deteniendo clasificación...")
+            print("\nDeteniendo clasificación...")
         
         finally:
             cap.release()
             cv2.destroyAllWindows()
-            print("✅ Cámara liberada")
+            print("Cámara liberada")
 
 def main():
     """Función principal"""
-    print("🚀 INICIANDO CLASIFICADOR DE BASURA EN TIEMPO REAL")
+    print("INICIANDO CLASIFICADOR DE BASURA EN TIEMPO REAL")
     print("=" * 50)
     
     try:
@@ -272,20 +272,20 @@ def main():
             if cap.isOpened():
                 camera_found = True
                 cap.release()
-                print(f"✅ Cámara encontrada en índice {camera_index}")
+                print(f"Cámara encontrada en índice {camera_index}")
                 break
             cap.release()
         
         if not camera_found:
-            print("❌ No se encontró ninguna cámara conectada")
+            print("No se encontró ninguna cámara conectada")
             return
         
         # Ejecutar clasificación
         classifier.run_camera_classification(camera_index)
         
     except Exception as e:
-        print(f"❌ Error: {e}")
-        print("\n🔧 Soluciones posibles:")
+        print(f"Error: {e}")
+        print("\nSoluciones posibles:")
         print("1. Asegúrate de que hay un modelo entrenado")
         print("2. Verifica que la cámara esté conectada")
         print("3. Ejecuta: pip install opencv-python")

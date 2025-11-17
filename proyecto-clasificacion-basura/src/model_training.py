@@ -83,7 +83,7 @@ class ModelTrainer:
         # Usar self.run_dir en lugar de crear nuevo directorio
         model_path = self.run_dir / f"{model_name}.h5"
         model.save(str(model_path))
-        logger.info(f"✅ Modelo guardado: {model_path}")
+        logger.info(f"Modelo guardado: {model_path}")
         
         # Guardar historial
         history_path = self.run_dir / f"{model_name}_history.json"
@@ -94,7 +94,7 @@ class ModelTrainer:
         
         with open(history_path, 'w') as f:
             json.dump(history_dict, f, indent=4)
-        logger.info(f"✅ Historial guardado: {history_path}")
+        logger.info(f"Historial guardado: {history_path}")
         
         # Guardar metadatos
         metadata = {
@@ -116,11 +116,11 @@ class ModelTrainer:
         
         callbacks_list = self.setup_callbacks()
         
-        print("🚀 INICIANDO ENTRENAMIENTO")
+        print("INICIANDO ENTRENAMIENTO")
         print("=" * 60)
         
         # Etapa 1: Entrenar solo capas densas
-        print("\n📚 ETAPA 1: Entrenamiento de capas densas")
+        print("\nETAPA 1: Entrenamiento de capas densas")
         print("-" * 50)
         
         history_stage1 = model.fit(
@@ -133,7 +133,7 @@ class ModelTrainer:
         )
         
         # Etapa 2: Fine-tuning (descongelar capas base)
-        print("\n🎯 ETAPA 2: Fine-tuning completo")
+        print("\nETAPA 2: Fine-tuning completo")
         print("-" * 50)
         
         # Descongelar capas base
@@ -164,9 +164,9 @@ class ModelTrainer:
         
         model_path = self.save_model_and_history(model, combined_history, "best_model")
         
-        print(f"💾 Modelo guardado en: {model_path}")
+        print(f"Modelo guardado en: {model_path}")
         
-        return model, combined_history  # Corregido: usar 'model' en lugar de 'trained_model'
+        return model, combined_history 
 
     def combine_histories(self, history1, history2):
         """Combina los historiales de las dos etapas de entrenamiento"""
@@ -245,18 +245,18 @@ class ModelTrainer:
         with open(str(self.run_dir / "training_info.json"), 'w') as f:
             json.dump(training_info, f, indent=4)
         
-        print(f"\n💾 Modelo e información guardados en: {self.run_dir}")
+        print(f"\nModelo e información guardados en: {self.run_dir}")
 
 def main():
     from src.data_generators import main as data_generator_main
     from src.model_builder import ModelBuilder
     
     # Cargar datos
-    print("📥 Cargando generadores de datos...")
+    print("Cargando generadores de datos...")
     train_gen, val_gen, test_gen, class_weights = data_generator_main()  # Corregido: solo una llamada
     
     # Construir modelo
-    print("🔨 Construyendo modelo...")
+    print("Construyendo modelo...")
     builder = ModelBuilder()
     model = builder.build_model()
     model = builder.compile_model(model)

@@ -52,7 +52,7 @@ class AdvancedAugmentor:
     
     def balance_dataset(self):
         """Balancea el dataset aplicando data augmentation a clases minoritarias"""
-        print("⚖️ Balanceando dataset...")
+        print("Balanceando dataset...")
         
         train_path = Path("data/processed/train")
         
@@ -103,7 +103,7 @@ class AdvancedAugmentor:
                 cv2.imwrite(str(new_path), augmented_image_bgr)
                 augmented_count += 1
         
-        print(f"✓ {class_name}: {augmented_count} imágenes aumentadas")
+        print(f"{class_name}: {augmented_count} imágenes aumentadas")
 
 def main():
     augmentor = AdvancedAugmentor()

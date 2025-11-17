@@ -26,7 +26,7 @@ class ModelBuilder:
         if model_name not in base_models:
             raise ValueError(f"Modelo no soportado: {model_name}")
         
-        print(f"🔄 Creando modelo base: {model_name}")
+        print(f"Creando modelo base: {model_name}")
         
         # Crear modelo base pre-entrenado
         base_model = base_models[model_name](
@@ -89,7 +89,7 @@ class ModelBuilder:
             ]
         )
         
-        print("✅ Modelo compilado:")
+        print("Modelo compilado:")
         print(f"   - Optimizer: Adam (lr={self.config['training']['learning_rate']})")
         print(f"   - Loss: categorical_crossentropy")
         print(f"   - Metrics: accuracy, precision, recall, AUC")
@@ -98,14 +98,14 @@ class ModelBuilder:
     
     def model_summary(self, model):
         """Muestra resumen del modelo"""
-        print("\n📊 Resumen del Modelo:")
+        print("\nResumen del Modelo:")
         model.summary()
         
         # Contar parámetros entrenables
         trainable_params = sum([tf.keras.backend.count_params(w) for w in model.trainable_weights])
         non_trainable_params = sum([tf.keras.backend.count_params(w) for w in model.non_trainable_weights])
         
-        print(f"\n📈 Parámetros del modelo:")
+        print(f"\nParámetros del modelo:")
         print(f"   - Entrenables: {trainable_params:,}")
         print(f"   - No entrenables: {non_trainable_params:,}")
         print(f"   - Total: {trainable_params + non_trainable_params:,}")

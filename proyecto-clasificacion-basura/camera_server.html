@@ -50,18 +50,18 @@
         </head>
         <body>
             <div class="container">
-                <h1>🎯 ECO AI - Clasificador de Basura</h1>
+                <h1>ECO AI - Clasificador de Basura</h1>
                 
                 <div class="instructions">
-                    <h3>📱 Instrucciones:</h3>
+                    <h3>Instrucciones:</h3>
                     <p>1. Permite el acceso a la cámara cuando Safari lo pida</p>
                     <p>2. Apunta los objetos de basura a la cámara</p>
                     <p>3. Mira los resultados en tu computadora</p>
-                    <p><strong>💡 Consejo:</strong> Usa la cámara de tu computadora para clasificar</p>
+                    <p><strong>Consejo:</strong> Usa la cámara de tu computadora para clasificar</p>
                 </div>
                 
-                <button onclick="startCamera()">🎥 Activar Cámara iPhone</button>
-                <button onclick="stopCamera()">⏹️ Detener Cámara</button>
+                <button onclick="startCamera()">Activar Cámara iPhone</button>
+                <button onclick="stopCamera()">Detener Cámara</button>
                 
                 <div id="status" class="status disconnected">
                     Cámara iPhone: Desconectada
@@ -98,7 +98,7 @@
                         });
                         
                         video.srcObject = stream;
-                        updateStatus('Cámara iPhone: Conectada ✅', true);
+                        updateStatus('Cámara iPhone: Conectada', true);
                         
                     } catch (err) {
                         updateStatus('Error: ' + err.message, false);
