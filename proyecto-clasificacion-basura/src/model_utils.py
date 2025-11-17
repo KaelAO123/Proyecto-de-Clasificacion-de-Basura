@@ -16,7 +16,7 @@ def save_model_and_history(model, history, model_name="best_model"):
     # Guardar modelo
     model_path = models_dir / f"{model_name}.h5"
     model.save(str(model_path))
-    logger.info(f"✅ Modelo guardado: {model_path}")
+    logger.info(f"Modelo guardado: {model_path}")
     
     # Guardar historial
     history_path = models_dir / f"{model_name}_history.json"
@@ -27,7 +27,7 @@ def save_model_and_history(model, history, model_name="best_model"):
     
     with open(history_path, 'w') as f:
         json.dump(history_dict, f, indent=4)
-    logger.info(f"✅ Historial guardado: {history_path}")
+    logger.info(f"Historial guardado: {history_path}")
     
     # Guardar metadatos
     metadata = {
@@ -56,14 +56,14 @@ def load_model_and_history(model_name="best_model"):
     
     # Cargar modelo
     model = tf.keras.models.load_model(str(model_path))
-    logger.info(f"✅ Modelo cargado: {model_path}")
+    logger.info(f"Modelo cargado: {model_path}")
     
     # Cargar historial si existe
     history = {}
     if history_path.exists():
         with open(history_path, 'r') as f:
             history = json.load(f)
-        logger.info(f"✅ Historial cargado: {history_path}")
+        logger.info(f"Historial cargado: {history_path}")
     
     return model, history
 

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>♻️ EcoClassify - Clasificador Inteligente</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header Mejorado -->
+        <header class="app-header">
+            <div class="header-content">
+                <div class="logo">
+                    <i class="fas fa-recycle"></i>
+                    <div class="logo-text">
+                        <h1>EcoClassify</h1>
+                        <span>Clasificación Inteligente</span>
+                    </div>
+                </div>
+                <div class="connection-status">
+                    <div class="status-indicators">
+                        <div class="status-item">
+                            <div class="status-dot" id="serverStatus"></div>
+                            <span>Servidor</span>
+                        </div>
+                        <div class="status-item">
+                            <div class="status-dot" id="modelStatus"></div>
+                            <span>Modelo IA</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Panel Principal -->
+        <main class="main-content">
+            <!-- Sección de Cámara con Resultados Sobreimpresos -->
+            <section class="camera-section">
+                <div class="camera-container">
+                    <div class="camera-frame">
+                        <video id="video" autoplay playsinline muted></video>
+                        
+                        <!-- Resultado sobreimpreso en la cámara -->
+                        <!-- <div class="overlay-result" id="overlayResult">
+                            <div class="overlay-content">
+                                <div class="overlay-icon" id="overlayIcon">
+                                    <i class="fas fa-question"></i>
+                                </div>
+                                <div class="overlay-text">
+                                    <h3 id="overlayClass">—</h3>
+                                    <div class="overlay-confidence">
+                                        <span id="overlayConfidence">0%</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="overlay-arrow">
+                                <i class="fas fa-arrow-down"></i>
+                            </div>
+                        </div> -->
+
+                        <!-- Indicador de zona de análisis -->
+                        <div class="focus-reticle" id="focusReticle">
+                            <div class="reticle-square"></div>
+                            <div class="reticle-crosshairs">
+                                <div class="crosshair horizontal"></div>
+                                <div class="crosshair vertical"></div>
+                            </div>
+                            <div class="reticle-label">ZONA DE ANÁLISIS</div>
+                        </div>
+                        
+                        <!-- Información de rendimiento -->
+                        <div class="camera-overlay">
+                            <div class="overlay-stats">
+                                <div class="stat">
+                                    <i class="fas fa-bolt"></i>
+                                    <span id="fps">0</span> FPS
+                                </div>
+                                <div class="stat">
+                                    <i class="fas fa-clock"></i>
+                                    <span id="latency">0</span>ms
+                                </div>
+                            </div>
+                            <div class="recording-indicator">
+                                <div class="pulse-dot"></div>
+                                <span>ANALIZANDO</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Controles de Cámara -->
+                    <div class="camera-controls">
+                        <button id="toggleCamera" class="control-btn primary">
+                            <i class="fas fa-camera"></i>
+                            <span>Activar Cámara</span>
+                        </button>
+                        <button id="toggleProcessing" class="control-btn secondary" disabled>
+                            <i class="fas fa-pause"></i>
+                            <span>Pausar</span>
+                        </button>
+                        <button id="captureFrame" class="control-btn capture" disabled>
+                            <i class="fas fa-crosshairs"></i>
+                            <span>Enfocar</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel de Resultados Móvil (Opcional) -->
+            <section class="mobile-results" id="mobileResults">
+                <div class="mobile-result-card">
+                    <div class="mobile-result-header">
+                        <h4>Resultado Actual</h4>
+                        <button class="mobile-toggle" id="mobileToggle">
+                            <i class="fas fa-chevron-up"></i>
+                        </button>
+                    </div>
+                    <div class="mobile-result-content" id="mobileResultContent">
+                        <div class="mobile-classification">
+                            <div class="mobile-icon" id="mobileIcon">
+                                <i class="fas fa-question"></i>
+                            </div>
+                            <div class="mobile-info">
+                                <h3 id="mobileClass">—</h3>
+                                <p id="mobileDescription">Apunte la cámara hacia un objeto</p>
+                            </div>
+                            <div class="mobile-confidence">
+                                <span id="mobileConfidence">0%</span>
+                            </div>
+                        </div>
+                        
+                        <!-- Barra de confianza móvil -->
+                        <div class="mobile-confidence-meter">
+                            <div class="mobile-meter-bar">
+                                <div class="mobile-meter-fill" id="mobileMeterFill"></div>
+                            </div>
+                            <div class="mobile-meter-labels">
+                                <span>0%</span>
+                                <span>100%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Panel de Resultados (Para desktop) -->
+            <section class="results-section" id="desktopResults">
+                <div class="results-container">
+                    <!-- Resultado Principal -->
+                    <div class="primary-result" id="primaryResult">
+                        <div class="result-header">
+                            <h3><i class="fas fa-chart-bar"></i> Resultado Principal</h3>
+                            <div class="confidence-badge">
+                                <span id="mainConfidence">0%</span>
+                                Confianza
+                            </div>
+                        </div>
+                        <div class="classification-display">
+                            <div class="class-icon" id="classIcon">
+                                <i class="fas fa-question"></i>
+                            </div>
+                            <div class="class-info">
+                                <h2 id="predictedClass" class="class-name">—</h2>
+                                <div class="class-description" id="classDescription">
+                                    Apunte la cámara hacia un objeto para clasificarlo
+                                </div>
+                            </div>
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="meter-labels">
+                                <span>Baja</span>
+                                <span>Alta</span>
+                            </div>
+                            <div class="meter-bar">
+                                <div class="meter-fill" id="confidenceMeter"></div>
+                                <div class="meter-thumb" id="confidenceThumb"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Análisis Detallado -->
+                    <div class="detailed-analysis">
+                        <div class="analysis-header">
+                            <h4><i class="fas fa-microscope"></i> Análisis Detallado</h4>
+                            <div class="analysis-toggle" id="analysisToggle">
+                                <i class="fas fa-chevron-down"></i>
+                            </div>
+                        </div>
+                        <div class="probability-grid" id="probabilityGrid">
+                            <div class="empty-state">
+                                <i class="fas fa-chart-pie"></i>
+                                <p>Los resultados aparecerán aquí</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Historial de Clasificaciones -->
+                    <div class="classification-history">
+                        <div class="history-header">
+                            <h4><i class="fas fa-history"></i> Historial Reciente</h4>
+                            <button class="clear-history" id="clearHistory">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        <div class="history-items" id="historyItems">
+                            <div class="empty-history">
+                                <i class="fas fa-inbox"></i>
+                                <p>No hay clasificaciones recientes</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="app-footer">
+            <div class="footer-content">
+                <div class="system-info">
+                    <div class="info-item">
+                        <i class="fas fa-brain"></i>
+                        <span>IA TensorFlow</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-bolt"></i>
+                        <span>Tiempo Real</span>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-leaf"></i>
+                        <span>Eco-Friendly</span>
+                    </div>
+                </div>
+                <div class="version-info">
+                    <span>v2.1.0</span>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.socket.io/4.6.1/socket.io.min.js"></script>
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>
+</body>
+</html>

@@ -25,7 +25,7 @@ class ModelEvaluator:
     def evaluate_model(self):
         """Evalúa el modelo en el conjunto de test"""
         
-        print("🧪 EVALUANDO MODELO EN TEST SET")
+        print("EVALUANDO MODELO EN TEST SET")
         print("=" * 50)
         
         # Evaluación básica
@@ -33,7 +33,7 @@ class ModelEvaluator:
             self.test_generator, verbose=1
         )
         
-        print(f"\n📊 Resultados de Evaluación:")
+        print(f"\nResultados de Evaluación:")
         print(f"   - Loss: {test_loss:.4f}")
         print(f"   - Accuracy: {test_accuracy:.4f}")
         print(f"   - Precision: {test_precision:.4f}")
@@ -41,7 +41,7 @@ class ModelEvaluator:
         print(f"   - AUC: {test_auc:.4f}")
         
         # Predicciones
-        print("\n🎯 Generando predicciones...")
+        print("\nGenerando predicciones...")
         predictions = self.model.predict(self.test_generator, verbose=1)
         y_pred = np.argmax(predictions, axis=1)
         y_true = self.test_generator.classes
@@ -86,7 +86,7 @@ class ModelEvaluator:
         report_df.to_csv(self.results_dir / "classification_report.csv")
         report_df.to_markdown(self.results_dir / "classification_report.md")
         
-        print("\n📈 Reporte de Clasificación:")
+        print("\nReporte de Clasificación:")
         print(report_df.round(4))
         
         return report_df
@@ -143,7 +143,7 @@ class ModelEvaluator:
         misclassified_idx = np.where(y_true != y_pred)[0]
         
         if len(misclassified_idx) > 0:
-            print(f"\n❌ Ejemplos de misclasificaciones ({len(misclassified_idx)} casos):")
+            print(f"\nEjemplos de misclasificaciones ({len(misclassified_idx)} casos):")
             
             # Tomar algunos ejemplos aleatorios de los errores
             sample_idx = np.random.choice(
@@ -183,7 +183,7 @@ class ModelEvaluator:
             axes[i].axis('off')
 
             true_class = self.class_names[true_labels[i]]
-            pred_class = self.class_names[y_pred[sample_idx[i]]]  # ✅ usar sample_idx
+            pred_class = self.class_names[y_pred[sample_idx[i]]] 
 
             axes[i].set_title(f'Real: {true_class}\nPred: {pred_class}', color='red', fontsize=10)
 
@@ -219,7 +219,7 @@ class ModelEvaluator:
         with open(self.results_dir / "evaluation_results.json", 'w') as f:
             json.dump(evaluation_results, f, indent=4)
         
-        print(f"\n💾 Resultados guardados en: {self.results_dir}")
+        print(f"\nResultados guardados en: {self.results_dir}")
 
 def evaluate_complete_pipeline(model, test_generator):
     """Ejecuta evaluación completa del pipeline"""
@@ -266,20 +266,15 @@ def evaluate_complete_pipeline(model, test_generator):
 
 if __name__ == "__main__":
     from tensorflow.keras.models import load_model
-    from src.data_loader import create_test_generator  # asegúrate de tener esta función
+    from src.data_loader import create_test_generator  
     import yaml
 
     # Cargar configuración
     config = yaml.safe_load(open("config/parameters.yaml", "r"))
-
-    # Ruta del modelo ya entrenado
     model_path = config.get("model_path", "models/trained_models/20251105_094221/best_model.h5")
-
-    print(f"🧩 Cargando modelo entrenado desde: {model_path}")
+    print(f"Cargando modelo entrenado desde: {model_path}")
     model = load_model(model_path)
-
-    # Crear test_generator (usa la función que ya tengas para generar tus datos de test)
-    print("📂 Cargando conjunto de test...")
+    print("Cargando conjunto de test...")
     test_generator = create_test_generator(config)
 
     # Evaluar el modelo cargado

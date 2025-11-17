@@ -60,7 +60,7 @@ class DataGenerator:
             shuffle=False
         )
         
-        print("✅ Generadores de datos creados:")
+        print("Generadores de datos creados:")
         print(f"   - Training: {train_generator.samples} imágenes")
         print(f"   - Validation: {val_generator.samples} imágenes") 
         print(f"   - Test: {test_generator.samples} imágenes")
@@ -70,7 +70,7 @@ class DataGenerator:
     
     def visualize_augmentations(self, train_generator, num_images=8):
         """Visualiza ejemplos de data augmentation"""
-        print("\n🎨 Visualizando aumentos de datos...")
+        print("\nVisualizando aumentos de datos...")
         
         # Obtener un batch de imágenes
         x_batch, y_batch = next(train_generator)
@@ -103,7 +103,7 @@ class DataGenerator:
         
         class_weights_dict = dict(zip(classes, class_weights))
         
-        print("⚖️ Pesos de clases calculados:")
+        print("Pesos de clases calculados:")
         for class_idx, weight in class_weights_dict.items():
             class_name = list(train_generator.class_indices.keys())[class_idx]
             print(f"   {class_name}: {weight:.2f}")

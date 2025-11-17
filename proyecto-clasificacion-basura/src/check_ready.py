@@ -4,7 +4,7 @@ from pathlib import Path
 def check_evaluation_ready():
     """Verifica si todo está listo para evaluación"""
     
-    print("🔍 VERIFICANDO PREPARACIÓN PARA EVALUACIÓN")
+    print("VERIFICANDO PREPARACIÓN PARA EVALUACIÓN")
     print("=" * 50)
     
     checks = {
@@ -16,16 +16,16 @@ def check_evaluation_ready():
     
     all_ok = True
     for check, exists in checks.items():
-        status = "✅" if exists else "❌"
+        status = "Ok" if exists else "No Ok"
         print(f"{status} {check}")
         if not exists:
             all_ok = False
     
     if all_ok:
-        print("\n🎯 Todo listo! Puedes ejecutar:")
+        print("\nTodo listo! Puedes ejecutar:")
         print("   python evaluate_only.py")
     else:
-        print("\n⚠️  Faltan algunos elementos:")
+        print("\nFaltan algunos elementos:")
         if not checks["Modelo entrenado"]:
             print("   - Ejecuta primero: python src/model_training.py")
         if not checks["Datos de test"]:
